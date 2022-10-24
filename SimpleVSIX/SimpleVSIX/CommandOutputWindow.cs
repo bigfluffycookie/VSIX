@@ -83,33 +83,24 @@ namespace SimpleVSIX
 
         private void Execute(object sender, EventArgs e)
         {
-            if (pane == null)
-            {
-                pane = CreatePane(Guid.NewGuid(), "Step 5", true, false);
-            }
-
+            EnsurePaneExists();
             UpdatePane();
         }
 
-        IVsOutputWindowPane CreatePane(Guid paneGuid, string title,
-                        bool visible, bool clearWithSolution)
+        private void EnsurePaneExists()
         {
+            if (pane != null) return;
             var output = package.GetService<SVsOutputWindow, IVsOutputWindow>();
+            var guid = Guid.NewGuid();
 
             // Create a new pane.
-            output.CreatePane(
-                ref paneGuid,
-                title,
-                Convert.ToInt32(visible),
-                Convert.ToInt32(clearWithSolution));
+            output.CreatePane(ref guid, "Step 5", Convert.ToInt32(true), Convert.ToInt32(false));
 
             // Retrieve the new pane.
-            output.GetPane(ref paneGuid, out pane);
-
-            return pane;
+            output.GetPane(ref guid, out pane);
         }
 
-        void UpdatePane()
+        private void UpdatePane()
         {
             pane.OutputStringThreadSafe("Hello!!\n");
         }
