@@ -2,9 +2,7 @@
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
-using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.VisualStudio.RpcContracts.Commands;
 using Task = System.Threading.Tasks.Task;
 
 namespace SimpleVSIX
@@ -12,7 +10,7 @@ namespace SimpleVSIX
     /// <summary>
     /// Command handler
     /// </summary>
-    internal sealed class Command1
+    internal sealed class CommandOutputWindow
     {
         /// <summary>
         /// Command ID.
@@ -29,18 +27,22 @@ namespace SimpleVSIX
         /// </summary>
         private readonly AsyncPackage package;
 
+
+        private IVsOutputWindowPane pane;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="Command1"/> class.
+        /// Initializes a new instance of the <see cref="CommandOutputWindow"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
         /// <param name="commandService">Command service to add command to, not null.</param>
-        private Command1(AsyncPackage package, OleMenuCommandService commandService)
+        private CommandOutputWindow(AsyncPackage package, OleMenuCommandService commandService)
         {
             this.package = package ?? throw new ArgumentNullException(nameof(package));
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
+
             var menuItem = new MenuCommand(this.Execute, menuCommandID);
             commandService.AddCommand(menuItem);
         }
@@ -48,7 +50,7 @@ namespace SimpleVSIX
         /// <summary>
         /// Gets the instance of the command.
         /// </summary>
-        public static Command1 Instance
+        public static CommandOutputWindow Instance
         {
             get;
             private set;
@@ -76,20 +78,23 @@ namespace SimpleVSIX
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
             OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-            Instance = new Command1(package, commandService);
+            Instance = new CommandOutputWindow(package, commandService);
         }
 
         private void Execute(object sender, EventArgs e)
         {
-            CreatePane(new Guid(), "Step 5", true, false);
+            if (pane == null)
+            {
+                pane = CreatePane(Guid.NewGuid(), "Step 5", true, false);
+            }
+
+            UpdatePane();
         }
 
-        void CreatePane(Guid paneGuid, string title,
+        IVsOutputWindowPane CreatePane(Guid paneGuid, string title,
                         bool visible, bool clearWithSolution)
         {
-            IVsOutputWindow output =
-                (IVsOutputWindow)package.GetService<SVsOutputWindow, IVsOutputWindow>();
-            IVsOutputWindowPane pane;
+            var output = package.GetService<SVsOutputWindow, IVsOutputWindow>();
 
             // Create a new pane.
             output.CreatePane(
@@ -100,8 +105,13 @@ namespace SimpleVSIX
 
             // Retrieve the new pane.
             output.GetPane(ref paneGuid, out pane);
-            pane.OutputString("Hello!!");
-            
+
+            return pane;
+        }
+
+        void UpdatePane()
+        {
+            pane.OutputStringThreadSafe("Hello!!\n");
         }
     }
 }
