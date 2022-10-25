@@ -25,7 +25,6 @@ namespace SimpleVSIX
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [Guid(SimpleVSIXPackage.PackageGuidString)]
-    [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed class SimpleVSIXPackage : AsyncPackage
     {
         /// <summary>
@@ -47,7 +46,6 @@ namespace SimpleVSIX
             // When initialized asynchronously, the current thread may be a background thread at this point.
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            await CommandOutputWindow.InitializeAsync(this);
         }
 
         #endregion
