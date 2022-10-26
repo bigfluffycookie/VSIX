@@ -21,12 +21,14 @@ namespace SimpleVSIX
         [ImportingConstructor]
         public Logger([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             var outputWindow = serviceProvider.GetService(typeof(IVsOutputWindow)) as IVsOutputWindow;
             CreatePane(outputWindow);
         }
 
         private void CreatePane(IVsOutputWindow outputWindow)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             var guid = PaneId;
 
             // Create a new pane.

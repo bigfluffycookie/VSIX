@@ -2,12 +2,19 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using FluentAssertions;
 
 namespace SimpleVSIX.UnitTests
 {
     [TestClass]
     public class LoggerTests
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            SetCurrentThreadAsUIThread();
+        }
+
         [TestMethod]
         public void Ctor_CheckPaneIsInitializedCorrectly()
         {
@@ -60,6 +67,13 @@ namespace SimpleVSIX.UnitTests
             outputWindow.Setup(p => p.GetPane(ref It.Ref<Guid>.IsAny, out pane));
 
             return outputWindow;
+        }
+
+        public static void SetCurrentThreadAsUIThread()
+        {
+            var methodInfo = typeof(Microsoft.VisualStudio.Shell.ThreadHelper).GetMethod("SetUIThread", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            methodInfo.Should().NotBeNull("Could not find ThreadHelper.SetUIThread");
+            methodInfo.Invoke(null, null);
         }
     }
 }
