@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="CommandOutputWindow.cs" />
     <Compile Include="ILogger.cs" />
+    <Compile Include="InternalVisibleTo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleVSIXPackage.cs" />
     <Compile Include="SimpleVSIXPackage1.cs">

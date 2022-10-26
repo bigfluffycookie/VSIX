@@ -5,6 +5,8 @@ VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleVSIX", "SimpleVSIX\SimpleVSIX.csproj", "{E3348DEF-B635-46DD-A7CB-8C3B991A6455}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleVSIX.UnitTests", "SimpleVSIX.UnitTests\SimpleVSIX.UnitTests.csproj", "{7C7E9BCB-C700-4ECC-8AA9-7A0E9C0C7C96}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,14 @@ Global
 		{E3348DEF-B635-46DD-A7CB-8C3B991A6455}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E3348DEF-B635-46DD-A7CB-8C3B991A6455}.Release|x86.ActiveCfg = Release|x86
 		{E3348DEF-B635-46DD-A7CB-8C3B991A6455}.Release|x86.Build.0 = Release|x86
+		{7C7E9BCB-C700-4ECC-8AA9-7A0E9C0C7C96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C7E9BCB-C700-4ECC-8AA9-7A0E9C0C7C96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C7E9BCB-C700-4ECC-8AA9-7A0E9C0C7C96}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7C7E9BCB-C700-4ECC-8AA9-7A0E9C0C7C96}.Debug|x86.Build.0 = Debug|Any CPU
+		{7C7E9BCB-C700-4ECC-8AA9-7A0E9C0C7C96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C7E9BCB-C700-4ECC-8AA9-7A0E9C0C7C96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C7E9BCB-C700-4ECC-8AA9-7A0E9C0C7C96}.Release|x86.ActiveCfg = Release|Any CPU
+		{7C7E9BCB-C700-4ECC-8AA9-7A0E9C0C7C96}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
