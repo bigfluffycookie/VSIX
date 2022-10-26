@@ -38,7 +38,11 @@ namespace SimpleVSIX
 
         public void Log(string message)
         {
-            pane.OutputStringThreadSafe(message);
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                pane.OutputStringThreadSafe(message);
+            });
         }
     }
 }
