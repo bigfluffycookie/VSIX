@@ -1,11 +1,7 @@
 using Microsoft.VisualStudio.Shell.Interop;
-using SimpleVSIX;
-using Moq;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 
 namespace SimpleVSIX.UnitTests
@@ -14,46 +10,63 @@ namespace SimpleVSIX.UnitTests
     public class ILoggerTests
     {
         [TestMethod]
-        public void CreatePane_Verify_ReturnTrue()
+        public void Ctor_PaneIsInitializedCorrectly()
         {
-            var outputWindow = SetupOutputWindow();
-            var serviceProvider = SetupServiceProvider();
-            serviceProvider.Setup(p => p.GetService(typeof(IVsOutputWindow))).Returns(outputWindow.Object);
-            
-            var pane = SetupPane();
+            var pane = new Mock<IVsOutputWindowPane>();
             var paneObj = pane.Object;
-            outputWindow.Setup(p => p.GetPane(ref It.Ref<Guid>.IsAny, out paneObj));
+            var outputWindow = SetupOutputWindow(paneObj);
+            var serviceProvider = SetupServiceProvider(outputWindow.Object);
+            
+            _ = new Logger(serviceProvider.Object);
 
-            var logger = new Logger(serviceProvider.Object);
+            var expectedGuid = Logger.PaneId;
+            serviceProvider.Verify(p => p.GetService(typeof(IVsOutputWindow)), Times.Once);
+            outputWindow.Verify(p => p.CreatePane(ref expectedGuid, "Step 5", 1, 0), Times.Once);
+            outputWindow.Verify(p => p.GetPane(ref expectedGuid, out paneObj), Times.Once);
+        }
+
+        [TestMethod]
+        public void Log_ExpectedMessageIsLogged()
+        {
+            var pane = new Mock<IVsOutputWindowPane>();
+            var paneObj = pane.Object;
+            var outputWindow = SetupOutputWindow(paneObj);
+            var serviceProvider = SetupServiceProvider(outputWindow.Object);
+
+            var testSubject = new Logger(serviceProvider.Object);
             string loggerMsg = "Hello";
-            logger.Log(loggerMsg);
+            testSubject.Log(loggerMsg);
 
-            outputWindow.Verify(p => p.CreatePane(ref It.Ref<Guid>.IsAny, It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()));
-            outputWindow.Verify(p => p.GetPane(ref It.Ref<Guid>.IsAny, out paneObj));
             pane.Verify(p => p.OutputStringThreadSafe(loggerMsg), Times.Once());
         }
 
-        private Mock<IServiceProvider> SetupServiceProvider()
+        private Mock<IServiceProvider> SetupServiceProvider(IVsOutputWindow outputWindow = null)
         {
+            outputWindow ??= Mock.Of<IVsOutputWindow>();
+
             var serviceProvider = new Mock<IServiceProvider>();
+            serviceProvider.Setup(p => p.GetService(typeof(IVsOutputWindow))).Returns(outputWindow);
 
             return serviceProvider;
         }
 
-        private Mock<IVsOutputWindow> SetupOutputWindow()
+        private Mock<IVsOutputWindow> SetupOutputWindow(IVsOutputWindowPane pane)
         {
+            pane ??= Mock.Of<IVsOutputWindowPane>();
+
             var outputWindow = new Mock<IVsOutputWindow>();
-            outputWindow.Setup(p => p.CreatePane(ref It.Ref<Guid>.IsAny, It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()));
+            //outputWindow.Setup(p => p.CreatePane(ref It.Ref<Guid>.IsAny, It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()));
+            outputWindow.Setup(p => p.GetPane(ref It.Ref<Guid>.IsAny, out pane));
 
             return outputWindow;
         }
 
-        private Mock<IVsOutputWindowPane> SetupPane()
-        {
-            var pane = new Mock<IVsOutputWindowPane>();
-            pane.Setup(p => p.OutputStringThreadSafe(It.IsAny<string>()));
+//        private Mock<IVsOutputWindowPane> SetupPane()
+//        {
+//            var pane = new Mock<IVsOutputWindowPane>();
+////            pane.Setup(p => p.OutputStringThreadSafe(It.IsAny<string>()));
 
-            return pane;
-        }
+//            return pane;
+//        }
     }
 }

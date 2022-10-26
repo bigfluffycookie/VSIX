@@ -14,8 +14,8 @@ namespace SimpleVSIX
     [PartCreationPolicy(CreationPolicy.Shared)]
     internal class Logger : ILogger
     {
+        internal static readonly Guid PaneId = new Guid("A2BA99A1-99DD-47DD-9E21-579A738C7BA6");
         private IVsOutputWindow outputWindow;
-
         private IVsOutputWindowPane pane;
 
         [ImportingConstructor]
@@ -27,7 +27,7 @@ namespace SimpleVSIX
 
         private void CreatePane()
         {
-            var guid = Guid.NewGuid();
+            var guid = PaneId;
 
             // Create a new pane.
             outputWindow.CreatePane(ref guid, "Step 5", Convert.ToInt32(true), Convert.ToInt32(false));
