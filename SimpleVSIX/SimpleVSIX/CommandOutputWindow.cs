@@ -2,8 +2,16 @@
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
+using System.ComponentModel.Composition;
+
 using Microsoft.VisualStudio.RpcContracts.Commands;
 using Task = System.Threading.Tasks.Task;
+using EnvDTE;
+using System.ComponentModel.Composition.Hosting;
+using System.Diagnostics;
+using System.Linq;
+using Microsoft.VisualStudio.ComponentModelHost;
+using Exception = System.Exception;
 
 namespace SimpleVSIX
 {
@@ -27,8 +35,7 @@ namespace SimpleVSIX
         /// </summary>
         private readonly AsyncPackage package;
 
-
-        private IVsOutputWindowPane pane;
+        private ILogger logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandOutputWindow"/> class.
@@ -45,6 +52,16 @@ namespace SimpleVSIX
 
             var menuItem = new MenuCommand(this.Execute, menuCommandID);
             commandService.AddCommand(menuItem);
+
+            try
+            {
+                var comp = this.package.GetService<SComponentModel, IComponentModel>();
+                logger = comp.GetService<ILogger>();
+            }
+            catch(Exception exception)
+            {
+                Debug.WriteLine(exception);
+            }
         }
 
         /// <summary>
@@ -83,26 +100,7 @@ namespace SimpleVSIX
 
         private void Execute(object sender, EventArgs e)
         {
-            EnsurePaneExists();
-            UpdatePane();
-        }
-
-        private void EnsurePaneExists()
-        {
-            if (pane != null) return;
-            var output = package.GetService<SVsOutputWindow, IVsOutputWindow>();
-            var guid = Guid.NewGuid();
-
-            // Create a new pane.
-            output.CreatePane(ref guid, "Step 5", Convert.ToInt32(true), Convert.ToInt32(false));
-
-            // Retrieve the new pane.
-            output.GetPane(ref guid, out pane);
-        }
-
-        private void UpdatePane()
-        {
-            pane.OutputStringThreadSafe("Hello!!\n");
+            logger.Log("Hello\n");
         }
     }
 }
