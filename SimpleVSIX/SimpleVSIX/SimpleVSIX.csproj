@@ -45,6 +45,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Browse.cs" />
     <Compile Include="CommandOutputWindow.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="InternalVisibleTo.cs" />
@@ -85,6 +86,7 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Browse.png" />
     <Content Include="Resources\Command1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

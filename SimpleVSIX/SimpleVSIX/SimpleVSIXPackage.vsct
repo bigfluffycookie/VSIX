@@ -15,10 +15,10 @@
         defining some of the constants that we will use inside the file. -->
 
   <!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
-  <Extern href="stdidcmd.h"/>
+  <Extern href="stdidcmd.h" />
 
   <!--This header contains the command ids for the menus provided by the shell. -->
-  <Extern href="vsshlids.h"/>
+  <Extern href="vsshlids.h" />
 
   <!--The Commands section is where commands, menus, and menu groups are defined.
       This section uses a Guid to identify the package that provides the command defined inside it. -->
@@ -37,10 +37,21 @@
          must be a menu. -->
     <Groups>
       <Group guid="guidSimpleVSIXPackageCmdSet" id="MyMenuGroup" priority="0x0600">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS" />
       </Group>
+		<Group guid="guidSimpleVSIXPackageCmdSet" id="MySubMenuGroup" priority="0x0600">
+				<Parent guid="guidSimpleVSIXPackageCmdSet" id="MyMenuItem" />
+	    </Group>
     </Groups>
 
+	<Menus>
+			<Menu guid="guidSimpleVSIXPackageCmdSet" id="MyMenuItem" type="Menu" priority="0x0600">
+				<Parent guid="guidSimpleVSIXPackageCmdSet" id="MyMenuGroup" />
+				<Strings>
+					<ButtonText>Leylas Analyzer</ButtonText>
+				</Strings>
+			</Menu>
+		</Menus>
     <!--Buttons section. -->
     <!--This section defines the elements the user can interact with, like a menu command or a button
         or combo box in a toolbar. -->
@@ -53,10 +64,17 @@
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node /> -->
       <Button guid="guidSimpleVSIXPackageCmdSet" id="Command1Id" priority="0x0100" type="Button">
-        <Parent guid="guidSimpleVSIXPackageCmdSet" id="MyMenuGroup" />
+        <Parent guid="guidSimpleVSIXPackageCmdSet" id="MySubMenuGroup" />
         <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
-          <ButtonText>Invoke Leyla step5</ButtonText>
+          <ButtonText>Analyze</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidSimpleVSIXPackageCmdSet" id="cmdidBrowse" priority="0x0100" type="Button">
+        <Parent guid="guidSimpleVSIXPackageCmdSet" id="MySubMenuGroup" />
+        <Icon guid="guidImages1" id="bmpPic1" />
+        <Strings>
+          <ButtonText>Invoke Browse</ButtonText>
         </Strings>
       </Button>
     </Buttons>
@@ -68,7 +86,8 @@
             bitmap strip containing the bitmaps and then there are the numeric ids of the elements used
             inside a button definition. An important aspect of this declaration is that the element id
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
-      <Bitmap guid="guidImages" href="Resources\Command1.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough"/>
+      <Bitmap guid="guidImages" href="Resources\Command1.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
+      <Bitmap guid="guidImages1" href="Resources\Browse.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
     </Bitmaps>
   </Commands>
 
@@ -79,10 +98,22 @@
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidSimpleVSIXPackageCmdSet" value="{7a9fcb09-91b7-4b18-acf2-7a320e74d4ff}">
       <IDSymbol name="MyMenuGroup" value="0x1020" />
+		<IDSymbol name="MyMenuItem" value="0x1021" />
+		<IDSymbol name="MySubMenuGroup" value="0x1022" />
       <IDSymbol name="Command1Id" value="0x0100" />
+      <IDSymbol value="4131" name="cmdidBrowse" />
     </GuidSymbol>
 
-    <GuidSymbol name="guidImages" value="{bace7fec-7f13-4f48-99e1-252e65010f80}" >
+    <GuidSymbol name="guidImages" value="{bace7fec-7f13-4f48-99e1-252e65010f80}">
+      <IDSymbol name="bmpPic1" value="1" />
+      <IDSymbol name="bmpPic2" value="2" />
+      <IDSymbol name="bmpPicSearch" value="3" />
+      <IDSymbol name="bmpPicX" value="4" />
+      <IDSymbol name="bmpPicArrows" value="5" />
+      <IDSymbol name="bmpPicStrikethrough" value="6" />
+    </GuidSymbol>
+  
+    <GuidSymbol value="{004b13d7-a571-44c0-9dd3-74fa608c2058}" name="guidImages1">
       <IDSymbol name="bmpPic1" value="1" />
       <IDSymbol name="bmpPic2" value="2" />
       <IDSymbol name="bmpPicSearch" value="3" />

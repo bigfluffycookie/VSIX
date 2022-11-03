@@ -20,6 +20,9 @@ namespace SimpleVSIX
 
         public const string guidImagesString = "bace7fec-7f13-4f48-99e1-252e65010f80";
         public static Guid guidImages = new Guid(guidImagesString);
+
+        public const string guidImages1String = "004b13d7-a571-44c0-9dd3-74fa608c2058";
+        public static Guid guidImages1 = new Guid(guidImages1String);
     }
     /// <summary>
     /// Helper class that encapsulates all CommandIDs uses across VS Package.
@@ -27,7 +30,10 @@ namespace SimpleVSIX
     internal sealed partial class PackageIds
     {
         public const int MyMenuGroup = 0x1020;
+        public const int MyMenuItem = 0x1021;
+        public const int MySubMenuGroup = 0x1022;
         public const int Command1Id = 0x0100;
+        public const int cmdidBrowse = 0x1023;
         public const int bmpPic1 = 0x0001;
         public const int bmpPic2 = 0x0002;
         public const int bmpPicSearch = 0x0003;
